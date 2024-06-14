@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, send_file, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 from bs4 import BeautifulSoup
 import os
@@ -12,7 +12,7 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return send_file('index.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_files():
@@ -47,7 +47,7 @@ def upload_files():
             print("Not Following Back:", not_following_back)
             print("Not Followed Back:", not_followed_back)
 
-            return render_template('result.html', not_following_back=not_following_back, not_followed_back=not_followed_back)
+            return send_file('result.html', not_following_back=not_following_back, not_followed_back=not_followed_back)
         else:
             flash("Both files are the same", 'error')
             return redirect(url_for('index'))
