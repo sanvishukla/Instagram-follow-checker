@@ -163,7 +163,7 @@
             
             <button type="submit">Check</button>
         </form>
-<!--         <div class="flash-messages">
+        <div class="flash-messages">
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
@@ -173,7 +173,7 @@
                     {% endfor %}
                 {% endif %}
             {% endwith %}
-        </div> -->
+        </div>
         <p class="instructions">To export your followers/following data from Instagram:</p>
         <ol class="instructions">
             <li>Go to your Instagram profile.</li>
@@ -186,6 +186,37 @@
             <li>Extract the zip file and upload the HTML files here.</li>
         </ol>
     </div>
+    <div id="messageContainer" class="flash-messages">
+        <!-- Messages will be dynamically added here -->
+    </div>
+</div>
+
+<!-- Script for handling flash messages -->
+<script>
+    // Function to display messages
+    function displayMessage(message, category) {
+        var messageContainer = document.getElementById('messageContainer');
+        var alertDiv = document.createElement('div');
+        alertDiv.classList.add('alert', 'alert-' + category);
+        alertDiv.textContent = message;
+        messageContainer.appendChild(alertDiv);
+    }
+
+    // Function to handle form submission (you can adjust this based on your actual form handling logic)
+    document.getElementById('uploadForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Simulate form submission
+        // Replace this with actual AJAX request or form handling logic
+        var formData = new FormData(this);
+
+        // Example of success message (replace with actual logic)
+        displayMessage('Form submitted successfully!', 'success');
+
+        // Example of error message (replace with actual error handling)
+        // displayMessage('Error: Failed to submit form.', 'error');
+    });
+</script>
 
 
 </body>
