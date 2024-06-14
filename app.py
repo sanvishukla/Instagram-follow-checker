@@ -1,21 +1,26 @@
-from flask import Flask, send_file, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 from bs4 import BeautifulSoup
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='.')
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 # Ensure the upload folder exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
+not_following_back = []  # Define globally
+not_followed_back = []   # Define globally
+
 @app.route('/')
 def index():
-    return send_file('index.html')
+    return render_template('index.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_files():
+    global not_following_back, not_followed_back  # Access globally defined variables
+
     if 'followers_file' not in request.files or 'following_file' not in request.files:
         flash("Files not found in request", 'error')
         return redirect(url_for('index'))
@@ -47,13 +52,19 @@ def upload_files():
             print("Not Following Back:", not_following_back)
             print("Not Followed Back:", not_followed_back)
 
-            return send_file('result.html', not_following_back=not_following_back, not_followed_back=not_followed_back)
+            return redirect(url_for('show_results'))
         else:
             flash("Both files are the same", 'error')
             return redirect(url_for('index'))
     else:
         flash("Only HTML files are allowed", 'error')
         return redirect(url_for('index'))
+
+@app.route('/results')
+def show_results():
+    # Assuming 'result.html' contains the template for displaying results
+    global not_following_back, not_followed_back  # Access globally defined variables
+    return render_template('result.html', not_following_back=not_following_back, not_followed_back=not_followed_back)
 
 def parse_html(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
@@ -69,4 +80,4 @@ def parse_html(file_path):
         return usernames
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=1001, debug=True)
+    app.run(host='0.0.0.0', port=1002, debug=True)
