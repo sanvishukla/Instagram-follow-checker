@@ -22,15 +22,13 @@ def upload_files():
     global not_following_back, not_followed_back  # Access globally defined variables
 
     if 'followers_file' not in request.files or 'following_file' not in request.files:
-        flash("Files not found in request", 'error')
-        return redirect(url_for('index'))
+        return redirect(url_for('index', error='Files not found in request'))
 
     followers_file = request.files['followers_file']
     following_file = request.files['following_file']
 
     if followers_file.filename == '' or following_file.filename == '':
-        flash("One or both files are empty", 'error')
-        return redirect(url_for('index'))
+        return redirect(url_for('index', error='One or both files are empty'))
 
     if followers_file.filename.endswith('.html') and following_file.filename.endswith('.html'):
         if followers_file.filename != following_file.filename:  # Ensure files are not the same
@@ -43,22 +41,14 @@ def upload_files():
             followers_list = parse_html(followers_path)
             following_list = parse_html(following_path)
 
-            print("Followers List:", followers_list)
-            print("Following List:", following_list)
-
             not_following_back = [{'username': user, 'instagram_id': user} for user in following_list if user not in followers_list]
             not_followed_back = [{'username': user, 'instagram_id': user} for user in followers_list if user not in following_list]
 
-            print("Not Following Back:", not_following_back)
-            print("Not Followed Back:", not_followed_back)
-
             return redirect(url_for('show_results'))
         else:
-            flash("Both files are the same", 'error')
-            return redirect(url_for('index'))
+            return redirect(url_for('index', error='Both files are the same'))
     else:
-        flash("Only HTML files are allowed", 'error')
-        return redirect(url_for('index'))
+        return redirect(url_for('index', error='Only HTML files are allowed'))
 
 @app.route('/results')
 def show_results():
