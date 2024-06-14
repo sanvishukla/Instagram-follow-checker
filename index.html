@@ -103,7 +103,7 @@
         .instructions li {
             margin-bottom: 10px;
         }
-        .flash-message.flash-error {
+        .flash-messages {
             color: red;
         }
         
@@ -151,22 +151,23 @@
             <img class="logo-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/1024px-Instagram_icon.png" alt="Instagram Logo">
             <h1 class="title">Instagram Follow Checker</h1>
         </div>
+        
+        
+        <!-- Your form and other content -->
         <form action="{{ url_for('upload_files') }}" method="post" enctype="multipart/form-data">
-            <div>
-                <label for="followers_file">Upload Followers HTML File:</label>
-                <input type="file" name="followers_file" required>
-            </div>
-            <div>
-                <label for="following_file">Upload Following HTML File:</label>
-                <input type="file" name="following_file" required>
-            </div>
+            <label for="followers_file">Upload Followers HTML File:</label>
+            <input type="file" name="followers_file" required>
+            
+            <label for="following_file">Upload Following HTML File:</label>
+            <input type="file" name="following_file" required>
+            
             <button type="submit">Check</button>
         </form>
         <div class="flash-messages">
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
-                        <div class="flash-message flash-{{ category }}">
+                        <div class="alert alert-{{ category }}">
                             {{ message }}
                         </div>
                     {% endfor %}
